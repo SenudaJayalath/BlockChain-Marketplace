@@ -20,7 +20,6 @@ contract('Marketplace',([deployer,seller,buyer])=>{
             assert.notEqual(address,'')
             assert.notEqual(address,null)
             assert.notEqual(address,undefined)
-
         })
         it('has a name', async ()=>{
             const name =await marketplace.name()
@@ -59,7 +58,41 @@ contract('Marketplace',([deployer,seller,buyer])=>{
             assert.equal(product.purchased ,false)
         })
         it('sells products', async ()=>{
-            const product =await marketplace.purchaseProduct(productCount,{from:buyer, value: web3.utils.toWei('1','Ether')})
+            // Track seller balance before puchase
+            let oldSellerBalance
+            oldSellerBalance = await web3.eth.getBalance(seller)
+            //console.log(oldSellerBalance)
+            oldSellerBalance =new   web3.utils.toBN(oldSellerBalance)
+            //console.log(oldSellerBalance)
+
+            const result =await marketplace.purchaseProduct(productCount,{from:buyer, value: web3.utils.toWei('1','Ether')})
+            // check logs
+            const event =result.logs[0].args
+            assert.equal(event.id.toNumber(),productCount.toNumber(),'id is correct')
+            assert.equal(event.name ,'iPhone X')
+            assert.equal(event.price ,'1000000000000000000')
+            assert.equal(event.owner ,buyer)
+            assert.equal(event.purchased ,true)
+
+            // check the  seller receivenewSellerBalance
+            let newSellerBalance
+            newSellerBalance = await web3.eth.getBalance(seller)
+            newSellerBalance =new web3.utils.toBN(newSellerBalance)
+
+            let price
+
+            price= web3.utils.toWei('1','Ether')
+            price = new web3.utils.toBN(price)
+
+            const expectedBalance   = oldSellerBalance.add(price)
+            assert.equal(newSellerBalance.toString(),expectedBalance.toString())
+        
+            // Failurs
+
+            await marketplace.purchaseProduct(99,{from: buyer, value:web3.utils.toWei('1','Ether')}).should.be.rejected
+            await marketplace.purchaseProduct(productCount,{from: buyer, value:web3.utils.toWei('0.5','Ether')}).should.be.rejected
+            await marketplace.purchaseProduct(productCount,{from: seller, value:web3.utils.toWei('1','Ether')}).should.be.rejected
+
         })
     })
 
