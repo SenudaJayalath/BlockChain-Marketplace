@@ -33,7 +33,7 @@ class Main extends Component {
           </div>
           <button type="submit" className="btn btn-primary">Add Product</button>
         </form>
-         {/*<p>&nbsp;</p>
+         <p>&nbsp;</p>
         <h2>Buy Product</h2>
         <table className="table">
           <thead>
@@ -71,7 +71,7 @@ class Main extends Component {
               )
             })}
           </tbody>
-        </table> */}
+        </table> 
         </div>
      )
     }
