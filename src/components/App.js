@@ -37,9 +37,9 @@ class App extends Component {
     if (networkData){
       const marketplace = web3.eth.Contract(Marketplace.abi,networkData.address)
       const productCount =await marketplace.methods.productCount().call()
-      console.log(productCount.toNumber())
+      //console.log(productCount.toNumber())
       this.setState({marketplace:marketplace})
-      this.setState({productCount:productCount.toNumber()})
+      this.setState({productCount:productCount})
       this.setState({loading:false})
       //load products
       for (var i=1; i <= productCount;i++){
@@ -86,7 +86,7 @@ class App extends Component {
             <main role="main" className="col-lg-12 d-flex">
               { this.state.loading 
                 ? <div id="loader" className="text-center"><p className="text-center">Loading...</p></div>
-                : <Main createProduct={this.createProduct} products ={this.state.products} purchaseProduct={this.purchaseProduct} />}
+                : <Main createProduct={this.createProduct} products ={this.state.products} purchaseProduct={this.purchaseProduct} owner={this.state.account} />}
               
             </main>
           </div>

@@ -54,7 +54,7 @@ class Main extends Component {
                   <td>{window.web3.utils.fromWei(product.price.toString(), 'Ether')} Eth</td>
                   <td>{product.owner}</td>
                   <td>
-                    { !product.purchased
+                    { product.owner != this.props.owner
                       ? <button
                           name={product.id}
                           value={product.price}
@@ -62,9 +62,9 @@ class Main extends Component {
                             this.props.purchaseProduct(event.target.name, event.target.value)
                           }}
                         >
-                          Buy
+                        Buy
                         </button>
-                      : null
+                      : <button> Owned</button>
                     }
                     </td>
                 </tr>
